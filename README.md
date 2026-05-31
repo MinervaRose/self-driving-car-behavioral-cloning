@@ -1,14 +1,14 @@
 <div align="center">
 
-# 🚗 Self-Driving Car — Traffic Sign Classifier
+# 🚗 Self-Driving Car — Behavioral Cloning
 
-### Deep Learning for Autonomous Vehicle Perception
+### End-to-End Deep Learning for Autonomous Steering
 
-![Python](https://img.shields.io/badge/Python-Computer_Vision-blue?style=for-the-badge&logo=python)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-Deep_Learning-orange?style=for-the-badge&logo=tensorflow)
+![Python](https://img.shields.io/badge/Python-Deep_Learning-blue?style=for-the-badge&logo=python)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Neural_Networks-orange?style=for-the-badge&logo=tensorflow)
 ![Keras](https://img.shields.io/badge/Keras-CNN-red?style=for-the-badge&logo=keras)
-![OpenCV](https://img.shields.io/badge/OpenCV-Image_Processing-green?style=for-the-badge&logo=opencv)
-![Self Driving Cars](https://img.shields.io/badge/Domain-Autonomous_Vehicles-purple?style=for-the-badge)
+![Computer Vision](https://img.shields.io/badge/Computer_Vision-Autonomous_Driving-green?style=for-the-badge)
+![Udacity](https://img.shields.io/badge/Udacity-Self_Driving_Car_Engineer-purple?style=for-the-badge)
 
 Udacity Self-Driving Car Engineer Nanodegree Project
 
@@ -18,18 +18,13 @@ Udacity Self-Driving Car Engineer Nanodegree Project
 
 # Overview
 
-Traffic sign recognition is a fundamental capability for autonomous vehicles.
+Can a neural network learn to drive simply by watching a human driver?
 
-This project implements a Convolutional Neural Network (CNN) capable of classifying German road signs from camera imagery. The system learns visual features directly from image data and predicts the correct traffic sign category.
+In this project, a Convolutional Neural Network (CNN) is trained to predict steering angles directly from front-facing camera images collected in a driving simulator.
 
-The project demonstrates a complete computer vision workflow:
+Rather than manually programming lane-following rules, the model learns driving behavior from examples, an approach commonly known as **Behavioral Cloning**.
 
-- Dataset exploration
-- Data preprocessing
-- CNN design
-- Model training
-- Performance evaluation
-- Feature visualization
+The final model successfully drives autonomously around the simulator track without leaving the road.
 
 ---
 
@@ -37,127 +32,141 @@ The project demonstrates a complete computer vision workflow:
 
 The goals of this project were to:
 
-- Explore and analyze a real-world traffic sign dataset
-- Preprocess images for neural network training
-- Build a Convolutional Neural Network in TensorFlow/Keras
-- Train and evaluate the classifier
-- Investigate learned visual representations
-- Demonstrate how deep learning can support autonomous driving perception systems
+- Train an end-to-end steering model
+- Learn vehicle control directly from image data
+- Explore CNN architectures for autonomous driving
+- Apply data augmentation techniques
+- Validate autonomous driving performance in simulation
 
 ---
 
-# Dataset
+# Model Architecture
 
-The project uses the German Traffic Sign Recognition Benchmark (GTSRB).
+The model is based on NVIDIA's End-to-End Learning for Self-Driving Cars architecture.
 
-The dataset contains thousands of labeled traffic sign images across multiple classes including:
+Pipeline:
 
-- Speed limits
-- Warning signs
-- Stop signs
-- Yield signs
-- Priority signs
-- Directional signs
+1. Image cropping
+2. Image normalization
+3. Convolutional feature extraction
+4. Fully connected control layers
+5. Steering angle prediction
 
-This dataset is widely used as a benchmark for autonomous vehicle perception research.
+Key components include:
+
+- Cropping layer to remove irrelevant sky and vehicle hood information
+- Image normalization layer
+- Five convolutional layers
+- ELU activations
+- Dropout regularization
+- Fully connected steering prediction head
+
+The architecture was adapted from NVIDIA's research paper:
+
+> End-to-End Deep Learning for Self-Driving Cars
 
 ---
 
-# Technical Skills Demonstrated
+# Training Strategy
 
-## Computer Vision
+Several techniques were used to improve generalization:
 
-- Image preprocessing
-- Normalization
-- Dataset visualization
-- Feature extraction
+## Data Augmentation
 
-## Deep Learning
+- Horizontal image flipping
+- Steering angle inversion for flipped images
 
-- Convolutional Neural Networks (CNNs)
-- Activation functions
-- Model training
-- Validation workflows
+## Multi-Camera Training
 
-## Autonomous Vehicle Perception
+Images from:
 
-- Traffic sign recognition
-- Scene understanding
-- Visual classification pipelines
+- Center camera
+- Left camera
+- Right camera
+
+were incorporated into training.
+
+Steering corrections were applied to left and right camera images to teach recovery behavior.
+
+## Validation
+
+- 80% training data
+- 20% validation data
+
+Validation performance was monitored throughout training to reduce overfitting.
+
+---
+
+# Regularization
+
+To improve robustness:
+
+- Dropout layer (25%)
+- Validation split
+- Limited number of training epochs
+
+These measures helped reduce overfitting while maintaining autonomous driving performance.
+
+---
+
+# Results
+
+The trained model successfully completed laps around the simulator track in autonomous mode.
+
+The project demonstrates that a relatively compact CNN can learn steering behavior directly from raw camera imagery without explicit lane detection rules.
 
 ---
 
 # Repository Structure
 
 ```text
-Traffic_Sign_Classifier.ipynb     Main notebook
-writeup_report.pdf               Project report
-visualize_cnn.png                CNN filter visualization
-signnames.csv                    Class labels
-lenet.*                          Trained model files
-examples/                        Example images
+model.py                 Training pipeline
+drive.py                 Autonomous driving script
+model.h5                 Trained neural network
+writeup_report.pdf       Technical project report
+video.mp4                Autonomous driving demonstration
 ```
 
 ---
 
-# CNN Feature Visualization
+# Technical Skills Demonstrated
 
-The project includes visualization of learned convolutional filters.
-
-These visualizations help understand which visual patterns the network learns to detect when recognizing road signs.
-
-<img src="visualize_cnn.png" width="900">
-
----
-
-# Results
-
-The trained model successfully classifies traffic signs from unseen validation data and demonstrates the core principles behind modern perception systems used in autonomous vehicles.
-
-The project also explores how convolutional filters progressively learn geometric structures such as:
-
-- Edges
-- Shapes
-- Borders
-- Sign silhouettes
-- Symbol patterns
-
----
-
-# Key Takeaways
-
-This project provided practical experience with:
-
-- TensorFlow
+- Deep Learning
+- Convolutional Neural Networks
 - Keras
-- CNN architectures
-- Autonomous vehicle perception
-- Traffic sign recognition
-- Deep learning experimentation
-
-It also serves as one of the foundational perception modules completed as part of the Self-Driving Car Engineer Nanodegree.
+- TensorFlow
+- Computer Vision
+- Data Augmentation
+- Autonomous Driving
+- End-to-End Learning
+- Model Validation
 
 ---
 
-# Related Project
+# References
 
-This repository is part of a larger autonomous driving portfolio including:
+- NVIDIA: End-to-End Learning for Self-Driving Cars
+- Udacity Self-Driving Car Engineer Nanodegree
+
+---
+
+# Related Self-Driving Car Projects
+
+This repository is part of a larger autonomous driving portfolio:
 
 - Finding Lane Lines
 - Advanced Lane Finding
-- Traffic Sign Classification
+- Traffic Sign Classifier
 - Behavioral Cloning
 - Extended Kalman Filters
-- Kidnapped Vehicle Localization
-- Highway Path Planning
-- PID Control Systems
+- Kidnapped Vehicle
+- Highway Driving
+- PID Controller
 
 ---
 
 # Disclaimer
 
 This repository is provided for educational and portfolio purposes.
-
-Students may read the code and reports for learning purposes, but submitting this work as coursework would constitute plagiarism and may violate academic integrity policies.
 
 Copyright © Sabrina Palis
